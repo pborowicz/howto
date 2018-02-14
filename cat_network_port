@@ -1,0 +1,4 @@
+cat < /dev/null > /dev/tcp/<hostname or IP>/<port>
+
+example:
+cat < /dev/null > /dev/tcp/10.10.1.4/3189

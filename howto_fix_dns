@@ -1,0 +1,4 @@
+## this renegotiates DNS
+
+#!/bin/bash
+sudo netconfig update -f

@@ -1,0 +1,51 @@
+These are best practices for cloning or creating vm template.
+
+Cloned servers should be brought up without the network enabled. If this is not possible, the clone source should be shut down before the clone is brought up. Otherwise, you will have network conflicts.
+
+
+Cloned servers will retain mac address information. If a new mac address is assigned, it will default to eth1 and the old mac address will remain bonded to eth0.
+
+To fix this:
+rm /etc/udev/rules.d/70-persistent-net.rules
+
+Network configuration scripts can also retain unique details,
+location:
+/etc/sysconfig/network-scripts/ifcfg-eth[x]
+
+example:
+--------------------
+DEVICE=eth[x]
+BOOTPROTO=none 
+ONBOOT=yes 
+#NETWORK=10.0.1.0       <- REMOVE or MODIFY
+#NETMASK=255.255.255.0  <- REMOVE or MODIFY
+#IPADDR=10.0.1.20       <- REMOVE or MODIFY
+#HWADDR=xx:xx:xx:xx:xx  <- REMOVE or MODIFY
+#USERCTL=no             <- REMOVE or MODIFY
+# Remove any other *unique* or non-desired settings, such as UUID.
+-----------------
+
+sample ifcfg-eth0 for dhcp, suitable for templates:
+----------
+DEVICE=eth[x]
+BOOTPROTO=dhcp
+ONBOOT=yes
+----------
+
+
+check if there files in:
+/etc/sysconfig/networking/profiles/default/ifcfg-eth[x]
+if so, they should match
+/etc/sysconfig/network/scripts/
+
+Remove SSH keys:
+rm -rf /etc/ssh/ssh_host_*
+
+change hostname in:
+/etc/sysconfig/network
+
+also run
+hostname <hostname>
+
+reboot
+

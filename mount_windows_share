@@ -1,0 +1,3 @@
+#mount a windows share, username@domain or domain\\username both work
+
+sudo mount -o username=paul.borowicz@mobiwm.com //10.10.1.4/n /media/n_drive/

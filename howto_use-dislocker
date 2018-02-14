@@ -1,0 +1,5 @@
+Dislocker allows you to mount bitlocker encrypted files.
+
+sudo /usr/local/bin/dislocker-fuse -V /dev/sdb1 -u /media/usb/
+sudo mount -o loop /media/usb/dislocker-file /mnt/
+

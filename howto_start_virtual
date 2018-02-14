@@ -1,0 +1,3 @@
+# by default, your virtual clients have no network running
+
+sudo virsh net-start default network
