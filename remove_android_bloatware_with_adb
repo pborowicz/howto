@@ -1,0 +1,10 @@
+activate USB debugging mode
+
+adb shell
+
+pm list packages
+	- you can pipe to grep
+
+pm uninstall -k --user 0 <name of package>
+
+
