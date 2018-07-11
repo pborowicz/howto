@@ -1,0 +1,39 @@
+Add this line to the top of your file:
+
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+
+-----------
+https://urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/
+
+Deconstructing the command
+The whole line again:
+
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+exec is a bash builtin, so to see what it does, we run help exec:
+
+exec: exec [-cl] [-a name] [command [args ...]] [redirection ...]
+  Replace the shell with the given command.
+
+  Execute COMMAND, replacing this shell with the specified program.
+  ARGUMENTS become the arguments to COMMAND.  If COMMAND is not
+  specified, any redirections take effect in the current shell.
+In this case exec is being used without COMMAND – this line is redirecting I/O for the current shell. So what do the redirections do? To simplify things let’s clear out the nested commands and just look at the redirection:
+
+exec 1> >(some-command) 2>&1
+This is pretty simple redirection, obscured by that charming and easily google-able bash syntax that we all know and love bluff and tolerate. There are two redirections, the first being:
+
+1> >(some-command)
+This redirects file descriptor 1 (stdout) to the location >(some-command). That’s not a normal filename, though: it’s a process substitution, which is a non-POSIX bash feature2. >(some-command) returns a file descriptor that some-command will use as its stdin. This is exactly the same as piping our script’s stdout into some-command.
+
+Then we redirect file descriptor 2 (stderr) to the same location as file descriptor 1:
+
+2>&1
+In summary, we’ve redirected both stdout and stderr for our script to the same place: the stdin for another process, which is a command running in the background. In effect, this is the same as running the script at the command line like so:
+
+$ ./some-script 2>&1 | some-command
+In this case, some-command is:
+
+logger -s -t $(basename $0)
+From the logger(1) manpage we can see that this writes entries to syslog, tagged (-t) with the filename of our script ($(basename $0)) and echoing them to standard error (-s).
+
+So the full line takes both stdout and stderr from our script, and redirects them to the logger command, which sends them to the syslog and echoes them back to stderr.

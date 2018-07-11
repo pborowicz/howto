@@ -1,0 +1,1 @@
+sudo zgrep sshd /var/log/messages*.gz| grep Accepted| sed -re 's/.*from ([^ ]+).*/\1/'| sort -u

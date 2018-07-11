@@ -1,0 +1,7 @@
+pipe to xargs and run other commands
+
+-- by default the delimiter is a space
+ls | | xargs -d rm -R
+
+-- this changes the delimiter to "newline" so it works on files with spaces in the name
+ls | xargs -d "\n" rm -R

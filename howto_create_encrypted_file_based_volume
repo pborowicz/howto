@@ -1,0 +1,31 @@
+# Howto create an encrypted volume using LUKS and keyfile authentication
+
+#create 10M file
+dd if=/dev/zero of=luks-volume.img bs=1 count=0 seek=10M
+
+#create key file
+openssl rand -base64 2048 >luks-volume.key
+
+#create loop device
+losetup /dev/loop0 luks-volume.img
+
+#encrypt device
+cryptsetup luksFormat /dev/loop0 luks-volume.key
+
+#open encrypted volume
+cryptsetup luksOpen /dev/loop0 myEncryptedVolume --key-file luks-volume.key
+
+#mount volume
+mount /dev/mapper/myEncryptedVolume /media/tmp
+
+#format volume
+mkfs.ext3 /dev/mapper/myEncryptedVolume
+
+#unmount volume
+umount /mnt/tmp
+
+#close encrypted volume
+cryptsetup luksClose myEncryptedVolume
+
+#remove loop device
+losetup -d /dev/loop0

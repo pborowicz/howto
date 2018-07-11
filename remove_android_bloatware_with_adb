@@ -7,4 +7,11 @@ pm list packages
 
 pm uninstall -k --user 0 <name of package>
 
+-----------
 
+
+1. connect device, make sure ADB is working (check with CMD "adb devices")
+2. go to shell, using CMD "adb shell"
+3. get list of install packages using CMD "pm list packages" (use google to find out what does each package name means).
+4. remove package using CMD "pm uninstall -k --user 0 $packagname" (e.g. pm uninstall -k --user 0 com.android.inputdevices)
+5. if correctly typed, you receive message "SUCCESS"

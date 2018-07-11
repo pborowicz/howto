@@ -1,0 +1,3 @@
+example using bash_history
+
+cat ~/.bash_history | awk '{CMD[$1]++;count++;}END { for (a in CMD)print CMD[a] " " cmd[a]/count*100 "% " a}'|grep -v "./"|column -c3 -s " " -t|sort -nr| nl|head -n 15

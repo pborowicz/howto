@@ -1,0 +1,5 @@
+csplit lets you split files based on specific words or strings
+
+example:
+
+csplit --suppress-matched --prefix newfile --suffix-format %02d.msg filename.txt '/iamunique/' '{*}'
