@@ -1,0 +1,1 @@
+ip link set dev enp0s3 address DE:AD:BE:EF:CA:FE

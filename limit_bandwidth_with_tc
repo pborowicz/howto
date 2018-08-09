@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DEV="br-lan"
+IP="192.168.0.67"
+MAXRATE="100mbps"
+LIMIT="128kbps"
+
+tc qdisc add dev $DEV root handle 1: htb default 11
+
+tc class add dev $DEV parent 1: classid 1:1 htb rate $MAXRATE ceil $MAXRATE
+tc class add dev $DEV parent 1:1 classid 1:10 htb rate $LIMIT ceil $LIMIT
+tc class add dev $DEV parent 1:1 classid 1:11 htb rate $MAXRATE ceil $MAXRATE
+
+tc filter add dev $DEV protocol ip parent 1:0 prio 1 u32 match ip dst $IP flowid 1:10
+
+tc qdisc add dev $DEV parent 1:10 handle 20: pfifo limit 5
+tc qdisc add dev $DEV parent 1:11 handle 30: sfq perturb 10
