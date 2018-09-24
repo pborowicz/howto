@@ -1,0 +1,3 @@
+#howto configure an ssh tunnel to access a mysql database, using specific key
+
+ssh -i .ssh/oldssh/id_rsa -L 1111:localhost:3306 mydb1

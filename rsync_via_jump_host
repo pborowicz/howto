@@ -1,0 +1,1 @@
+rsync -azv --exclude directory/subdir --exclude directory2 --bwlimit=7000 --progress -e "ssh -i keylocation user@jumpbox.jump.com ssh" /media/data/ 10.17.3.11:/media/data
