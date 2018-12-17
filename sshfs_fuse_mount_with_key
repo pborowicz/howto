@@ -1,0 +1,5 @@
+
+
+sshfs user@hostname(or IP):/remote/path/ /local/path/ -o allow_other -o IdentityFile=/path/to/key
+
+-- this will allow access by non-root users

@@ -1,0 +1,27 @@
+1. Procure space by adding another driver
+
+2. locate volume and partition
+	- for this example, we are using /dev/sdd
+	- command 'fdisk /dev/sdd'
+	- fdisk commands
+		- 'n' (new partition)
+		- 'p' (primary partition)
+		- '1' (create partition number 1)
+		- 'enter' (default value, first block for start)
+		- 'enter' (default value, last block for end)
+			-this uses the whole drive
+		- 't' (select partiton type)
+		- '8e' (linux lvm type)
+		- 'p' (print disk partitions to verify change)
+		- 'w' (write partition to disk)
+	- command 'pvcreate /dev/sdd1'
+		- this adds the partiton, 'pvs' will now show the unused partition
+	-command 'vgextend volgroupname /dev/sdd1'
+		- this adds the partiton to the volume group where the logical volume you want ot extend is located
+	-command 'lvextend -l +100%FREE -r /dev/mapper/Volgroup-logicalvolume'
+		- this resizes the logical volume and partitions the extra space '-r'
+			-if you forget the '-r'
+				-xfs 'xfs_growfs -d /dev/mapper/VOLGROUP-logicalvol'
+				-ext3/4 'grow2fs /dev/mapper/VOLGROUP-logicalvol'
+
+-- verify that 'df' space matches 'lvs' space or your missing formatting. There may be a slight overhead for ext3/4 files so the match won't be exact

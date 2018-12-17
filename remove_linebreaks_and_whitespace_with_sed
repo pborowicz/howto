@@ -1,1 +1,9 @@
 sed ':a;N;$!ba;s/\n/ /g' filename | sed 's/[[:space:]]//g'
+
+
+inside vi - remove blank lines
+:g/^$/d
+
+
+remove horizontal blank lines
+tr -d '[:space:]' filename.file
