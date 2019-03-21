@@ -1,0 +1,19 @@
+#/bin/bash
+
+#get list of names for AWS ec2 instances
+instname=( $(/usr/bin/aws ec2 --profile production describe-instances --query "Reservations[].Instances[*].[Tags[?Key=='Name'].Value | [0],PrivateIpAddress]" --region=us-east-1 --output=text| grep -v None| cut -f1) )
+
+
+#get list of ip4 addresses for AWS ec2 instances
+ip4add=( $(/usr/bin/aws ec2 --profile production describe-instances --query "Reservations[].Instances[*].[Tags[?Key=='Name'].Value | [0],PrivateIpAddress]" --region=us-east-1 --output=text|  cut -f2| grep -v None) )
+
+#check and identify ip's with port 22 open
+x=1
+for i in i "${ip4add[@]}"
+	do
+		echo "testing $i"
+		nc -w2 -vz $i 22
+	done
+
+
+
