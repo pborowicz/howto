@@ -1,0 +1,21 @@
+#!/bin/bash
+### UNCOMMENT NEXT 2 LINES FOR DEBUGGING
+#set -x
+#trap read debug
+####----
+
+declare -a nonlc
+readarray -t nonlc < list_of_files # exclude newline.
+
+#start loop
+for ((i=0; i<${#nonlc[*]}; i++));
+	do
+	echo ${nonlc[i]}
+	grep -R  ${nonlc[i]}
+	##find $1 -type f -exec sed 's\"${nonlc[i]}"\"${nonlc[i],,}"\g' {} \;
+
+# echo string in lowercase
+	#echo "${nonlc[i],,}"
+#echo and increment string
+
+	done
