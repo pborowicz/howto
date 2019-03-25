@@ -1,0 +1,11 @@
+mobi user has 1 minute timeout
+
+login to postgres as mobi
+
+run this  command:
+
+ALTER ROLE mobi SET statement_timeout TO '6000s';
+
+reset to 1 minute timeout when done:
+
+ALTER ROLE mobi SET statement_timeout TO '60s';`

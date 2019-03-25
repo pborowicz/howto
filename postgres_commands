@@ -1,2 +1,36 @@
 ## Kill all connections from a specified user
 SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND usename = 'user';
+
+## create analyst user
+create role "first.last" NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN password "password";
+grant analyst to "first.last";
+
+
+## add users to group
+
+alter group data_team_admin add user "kbassyouny", "kkennedy", "cpfeiffer", "andrew.sumner", "cthom", "derik.taylor", "don.renollet", "eosborne", "mbailey", "aaron.trafford";
+
+## give users access to view all tables in mulitple schemas
+
+GRANT SELECT ON ALL TABLES IN SCHEMA "carrier_billing", "cdr", "customer_audits", "discrepancies", "flex", "health", "information_schema", "kill_bob", "logging", "mobi_warehouse", "new_lines", "payroll_pg", "pg_catalog", "public", "reconciliation", "revenue", "rpa", "snaps", "surveys", "testing" TO data_team_admin;
+
+## Grant access to read/write/execute on mulitple schemas
+
+GRANT SELECT ON ALL TABLES IN SCHEMA "information_schema", "pg_catalog", "public" to data_team_admin;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA "information_schema", "pg_catalog", "public" to data_team_admin;
+
+## Grant access to all tables in schemas to a user or group
+
+GRANT ALL ON ALL TABLES IN SCHEMA mobi_warehouse TO data_team_admin;
+
+
+## modify table defaults
+ALTER DEFAULT PRIVILEGES IN SCHEMA rpa GRANT ALL ON TABLES to data_team_admin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA rpa GRANT ALL ON SEQUENCES to data_team_admin;
+pgdb1 pgdb2 pgdb3
+
+log into database
+list users:
+psql -U mobi -d postgres -c '\du'
+
+psql -U mobi -d postgres -c '\password $USERNAME'
