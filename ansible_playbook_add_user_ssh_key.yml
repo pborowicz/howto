@@ -7,8 +7,8 @@
   become: yes
 
   vars:
-    - paul_password: '$1$arYescUj$JkjS2VAotCSClv9PxCGzi0'
-    - paul_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfBnf4QPymwoIQYan8L7D2skX8UBca6eF3I5wcWT6wXTS92wIhsiVCsF+Fc95n1a1TxAoVBbTpQ9HXHOEFkrN6plmEHAIyQxIaZK2EZh4qb5fln0ESWKqI8dgg+HZ9nKF/zjSa81hp5A7pqvHiTW84BC+e2TNka9Y+AGB/sesdQbcwyArZd9T4tCTsWurEWqk6dPmWx7mRr45zE+QOBxy9LYQ42W7GOBIid/Y0nh9LcmG0NpNhEwPgR2q7u6NojX6rMsqbeRgZ8oefBRtdvLOHRFYDOaV+w9UnmKpCmaIiNZnVohh1FIZaDlZBR+58RQMvG/qZQF5DZYGjhjLya+mH paul@linux-6ouh'
+    - paul_password: '' #this is the hash from your shadow file
+    - paul_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfBnf4QPymwoIQYan8L7D2skX8UBca6eF3I5wcWT6wXTS92wIhsiVCsF+Fc95n1a1TxAoVBbTpQ9HXHOEFkrN6plmEHAIyQxIaZK2EZh4qb5fln0ESWKqI8dgg+HZ9nKF/zjSa81hp5A7pqvHiTW84BC+e2TNka9Y+AGB/sesdQbcwyArZd9T4tCTsWurEWqk6dPmWx7mRr45zE+QOBxy9LYQ42W7GOBIid/Y0nh9LcmG0NpNhEwPgR2q7u6NojX6rMsqbeRgZ8oefBRtdvLOHRFYDOaV+w9UnmKpCmaIiNZnVohh1FIZaDlZBR+58RQMvG/qZQF5DZYGjhjLya+mH paul@linux-6ouh'  #this is your public key
 #  gather_facts: no
 
   tasks:
