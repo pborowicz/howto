@@ -1,0 +1,22 @@
+
+this uses a loop and string character substitution:
+
+#example renames all *.doc files with + in name to same name with _
+
+ls *.doc| while read -r line ; do mv $line ${line//+/_} ; done
+
+
+--------------
+http://tldp.org/LDP/abs/html/string-manipulation.html
+
+In general,
+
+To replace the first match of $substring with $replacement:
+
+${string/substring/replacement}
+
+To replace all matches of $substring with $replacement:
+
+${string//substring/replacement}
+
+EDIT: Note that this applies to a variable named $string.
