@@ -1,0 +1,58 @@
+btrfs compression
+mount -o compress /dev/sdx /mount
+fstab: UUID=1a2b3c4d /home btrfs subvol=@/home,compress 0 0
+    existing files compressed with 
+        - btrfs filesystem defrag -r /path
+
+btrfs df (find size used)
+    btrfs filesystem show /
+    btrfs filesystem df /
+    btrfs filesystem usage /
+
+
+snapper improvement
+    now timeline snapshots disabled
+    to fix older systems
+        snapper setup-quota'
+    blog
+        http://snapper.io/2016/05/18/space-aware-cleanup.html
+
+relocate data to free up space
+    btrfs fi balance start /mount -dusage=5
+
+snapper cleanup
+    snapper -c root list
+    snapper -c root delete snapshot_number(s)
+
+NO!!!! <btrfs check --repair> NO!!!! --last resort
+
+btrfs fixes (no risk to data)
+    btrfs scrub start /dev/sdx
+    fix booting
+        mount -o usebackuproot /dev/sdaX /mount
+
+not fixed - try this
+btrfs check
+    -save logs for bugreport
+
+backup to 2nd drive
+    btrfs restore /dev/sda1 /mnt/usb 
+
+
+btrfs (low risk to data)
+    btrfs rescue super-recover /dev/sdaX
+    btrfs rescue zero-log /dev/sdaX
+    btrfs rscue fix-device-size /dev/sdaX
+    
+    btrfs rescue chunk-recover /dev/sdaX
+        ---really slow
+
+btrfs incremental backups (wiki site)
+https://btrfs.wiki.kernel.org/index.php/Incremental_Backup
+
+btrfs RAID like features
+    btrfs balance start /mntpoint 
+    btrfs balance start -dconvert=raid1 -mconvert=raid1 /mntpoint
+
+btrfs send -p <old_snapshot> <new_snapshot | ssh <host> btrfs receive <subvolume>
+
