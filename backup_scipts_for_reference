@@ -1,0 +1,66 @@
+Main data drive is mounted to /data
+/data & /media backup are both immutabled 'chattr +i', this way nothing can be written to them without the drive mounted 
+  - this prevents accidently filling up the root drive.
+I have keys in place for ssh to ivan
+  
+
+#####
+Local backup script, from drive 1 to drive 2
+---------------------
+#!/bin/bash
+
+# mount backup drive
+mount /dev/disk/by-uuid/0ff2c8e8-c602-4698-af20-4aa1352c31b0 /media/backup
+
+#backup home directories
+rsync -arv --exclude '.cache' /home/* /media/backup/homes/
+
+#backup bkup directory for phones
+rsync -arv /bkup /media/backup/
+
+# change to share directory
+cd /data
+
+#backup relevent share directories
+rsync -arv --exclude "isomnt*" * /media/backup/data/  #backup all of /data
+
+
+#create subvolume snapshot
+btrfs subvolume snapshot /media/backup/ /media/backup/ss/`date +%y-%m-%d_%H-%M`
+
+# unmount backup drive
+umount /media/backup
+
+#create file to indicate backup completed
+touch /root/verify/backup_to_drive_done--$(date '+%FT%T')
+---------------------------------------
+
+
+#####
+remote backup script, from drive 2 to time4vps storage server
+----------------------------------
+#!/bin/bash
+
+#this logs this
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+
+### UNCOMMENT NEXT 2 LINES FOR DEBUGGING
+#set -x
+#trap read debug
+
+#backup home directories, exluding mine - probably move them all to borg
+rsync --bwlimit=10000 -arv --exclude 'paul' /home/* ivan.borowicz.org:/backup/homeserver/homes/
+
+#backup bkup directory for phones
+rsync --bwlimit=10000 -avr /bkup ivan.borowicz.org:/backup/homeserver/
+
+# change to share directory
+cd /data/share 
+
+#backup relevent share directories
+rsync --bwlimit=10000 -arv tools rpg documentation scans pictures Recipes music ivan.borowicz.org:/backup/homeserver/share/
+rsync --bwlimit=10000 -vvvpogt ./* ivan.borowicz.org:/backup/homeserver/share/
+
+#verify backup
+touch /root/verify/backupdone_to_ivan--$(date '+%FT%T')
+-----------------------------------------
