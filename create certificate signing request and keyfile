@@ -24,8 +24,8 @@ oname=""
 ounit=""
 email=""
 
-#check if there is a "-h" for help, or no $1 
-[ -z "$1"  ] || [ "$1" = "-h" ] && echo "This script will generate the req.cf used to generate a certificate for Navient, unix team."
+#check if there is a "-h" or "--help" for help, or no $1 
+[ -z "$1"  ] || [ "$1" = "-h" ] || [ "$1" = "--help" ] && echo "This script will generate the req.cf used to generate a certificate for Navient, unix team."
 echo ""
 echo "Usage: $0 <server> <name2> <name3> <name4>  #names are optionsl"
 echo ""
