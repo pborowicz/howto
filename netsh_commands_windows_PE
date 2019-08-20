@@ -1,0 +1,8 @@
+Netsh 
+ - netsh interface ip show config
+    -find the interface that is connected and note the name in quotes “name”
+ - netsh interface ip set address name="Local Area Connection" static 192.168.0.20 255.255.255.0 192.168.0.1 1
+    -netsh interface ip set address name=”<from above>” static ip netmask gateway
+    -if you configure the wrong address you need to stick a junk IP on it with the same command
+ - netsh interface ip set dns "Local Area Connection" static 192.168.0.200
+    -this sets the dns server
