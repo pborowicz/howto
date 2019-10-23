@@ -1,0 +1,31 @@
+I've heard this referred to as a "flying tarball"
+
+First, on the receiving machine, as root
+cd to the directory you want to copy files into
+run this command and it will wait for the sending servers
+'nc -l 7000 | tar -xavf -'
+  - netcat, listen on port 7000 (tcp), then pipe to tar with extract(x) archive(a) verbose(v) file(f). [The file is -]
+  - archive flag keeps the permissions and ownership on the files. This can be used in your root directory (/) if you want to clone a server
+
+** recieve with gzip - this is identical with the addition of the gunzip(z) flag, it will use more cpu and less bandwidth
+'nc -l 7000 | tar -xazvf -'
+
+
+----------------------------------------------------------
+----------------------------------------------------------
+Now, logon to the sending machine, as root
+cd to the directory you want to copy from
+'tar -cavf - * | nc otherhost 7000'
+  - tar up the files in the current dirctory with these flags to create(c) archive(a) verbose(v) file(f) [the file is -]
+  - archive flag keeps the permissions and ownership.
+  - command is piped to netcat which sends it to the otherhost on port 7000 (tcp)
+        or, with gzip
+# tar -cazvf - * | nc otherhost 7000 
+
+
+Other examples
+        copy the directory above the one you're in
+# tar -cazvf - dir | nc otherhost 7000
+
+        skip mounts inside folder
+tar -cazvf - * --one-file-system <filesystem> |nc nunifiaia400 7000
