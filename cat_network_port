@@ -1,4 +1,11 @@
+This explains how to check access to a tcp or upd port with cat instead of ncat or nmap.
+
 cat < /dev/null > /dev/tcp/<hostname or IP>/<port>
 
 example:
 cat < /dev/null > /dev/tcp/10.10.1.4/3189
+
+
+
+multiple ports:
+{ TESTHOST="target_host_or_ip";for TESTPORT in 80 443; do (echo > /dev/tcp/$TESTHOST/$TESTPORT) &>/dev/null && echo "$TESTPORT to $TESTHOST worked" || echo "$TESTPORT to $TESTHOST failed"; done } | tee `hostname -s`_ports.txt
