@@ -1,0 +1,66 @@
+These are directions to resize a multipath disk on a RH system. This does not require a reboot.
+part of this is cribbed from Brian Pitts, https://www.polibyte.com/2011/01/26/online-resizing-with-multipath-and-lvm/
+
+
+Find the correct device
+
+pvs
+
+    Look for the volume group device in the PV column
+
+ 
+
+This is a partition on the disk you want to work with, run lsblk and grep for the part after /dev/mapper with a flag -B3
+
+lsblk | grep -B3 <device>
+
+ 
+
+Look for the disk above the partition
+
+multipath -l <disk>
+
+ 
+
+Look for the devices above:
+
+echo 1 > /sys/block/sdx/device/rescan
+
+echo 1 > /sys/block/sdx/device/rescan
+
+echo 1 > /sys/block/sdx/device/rescan
+
+echo 1 > /sys/block/sdx/device/rescan
+
+Resize the multipath device
+
+multipathd resize map disk
+
+    You should see “ok”
+
+Resize the partition on the device
+
+There are two parts to this. Performing the resize, and getting the device mapper to realize that the partition has been resized.
+
+To perform the resize, use parted.
+
+parted
+
+Parted> select /dev/mapper/disk
+
+Parted> p
+
+Parted> resizepart 1 429GB
+ - get new size from listing after p (print)
+
+Parted> q
+
+Resize the LVM physical volume
+
+pvresize /dev/dm-6
+
+Resize the LVM logical volume
+
+I used vgdisplay vg-esan1 to see how much space was available. It’s a good idea to keep some in reserve for snapshots or emergencies.
+
+lvextend -L +240G -r /dev/vgoracle/FS_oracle
