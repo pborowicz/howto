@@ -1,4 +1,4 @@
-These are directions to resize a multipath disk on a RH system. This does not require a reboot.
+These are directions to resize a multipath disk on a RH Linux system with LVM. This does not require a reboot.
 part of this is cribbed from Brian Pitts, https://www.polibyte.com/2011/01/26/online-resizing-with-multipath-and-lvm/
 
 
