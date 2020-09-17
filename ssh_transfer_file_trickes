@@ -1,0 +1,57 @@
+File Transfer with SSH, Tee, and Base64
+By Susam Pal on 19 Nov 2019
+
+Computer servers deployed in a secure environment may allow SSH sessions but forbid SCP, SFTP, and execution of remote commands without a login shell. Such restricted access is typically enforced with SSH gateways and firewalls. An SSH gateway provides controlled access to the remote system. A firewall can ensure that only an SSH gateway can connect to the remote system. Thus, users can be forced to connect to the remote system only via the SSH gateway which can now control what is allowed and what isn't.
+
+Even if SCP, SFTP, and remote command execution without a login shell are forbidden, as long as we get a login shell on our terminal and we can print data on the terminal, we are already able to transfer data from the remote system to our local system. The data is in the terminal. It is now only a matter of figuring out how to copy that data to a file. Assuming that both the remote and local systems are Unix-like, the following steps show one way to achieve this:
+
+    Connect to the remote system with ssh and pipe the output to tee to write the entire session to a text file on the local system.
+
+      ssh user@host | tee ssh.txt
+
+    This type of pipeline works as intended even while connecting to a remote system via a jumphost or an SSH gateway.
+
+    In the remote system, create a 10 MB file to serve as an example payload to be transferred.
+
+      head -c 10485760 /dev/urandom > /tmp/payload
+
+    You probably already have a meaningful payload that you want to copy, so in that case, you would skip this step.
+
+    Compute checksum on the file. This will be used later to verify that the entire file is transferred correctly.
+
+      sha1sum /tmp/payload
+
+    Print Base64 representation of the file.
+
+      base64 /tmp/payload
+
+    Depending on the Internet bandwidth, this can take a few seconds to a few minutes to complete.
+
+    End the SSH session.
+
+      exit
+
+    On the local system, extract the Base64 encoded payload and decode it. Assuming the shell prompt on the remote system ends with the dollar sign (i.e., $), the following command does this.
+
+      sed '1,/$ base64/d;/$ exit/,$d' ssh.txt | base64 --decode > payload
+
+    Extract the checksum computed on the original file.
+
+      grep -A 1 sha1sum ssh.txt
+
+    Compute checksum on the decoded payload.
+
+      sha1sum payload
+
+    Ensure that the checksum in this step matches the checksum in the previous step.
+
+--------------------
+
+Alternative solution in these cases:
+
+    ssh hostname tar cvjf - /path/to/folder | tar xjf -
+
+Basically I ask ssh to execute tar on the remote host to create a compressed archive. ssh will output the archive contents on the local host; this data is then passed on to a local tar for extraction.
+
+--------
+
